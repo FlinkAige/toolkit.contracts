@@ -33,7 +33,6 @@ public:
                     const public_key& temp_amc_pub);
         
     ACTION submitaction(const name& account,const vector<char> packed_action,const eosio::signature& sign);
-    ACTION test(const vector<char> packed_action,const eosio::signature& sign);
     
     ACTION keypackact(const eosio::public_key& amc_pubkey){
         check(false,"Execution failed");

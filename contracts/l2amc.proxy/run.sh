@@ -1,0 +1,13 @@
+c=amaxup.proxy
+
+amcli convert pack_action_data -h
+
+~/code/workspace/dex/ton4j/utils/src/test/java/org/ton/java/utils
+
+pubKey: fc835dde75b3b579afe9425ef7184715ecd51a66c50f93e4b4b46291a3637508
+pubKeyBase64: /INd3nWztXmv6UJe9xhHFezVGmbFD5PktLRikaNjdQg=
+secKey: b9d067d274e8d82b2c4587d806988e42ad541e420fdcea57549af6c05fab620cfc835dde75b3b579afe9425ef7184715ecd51a66c50f93e4b4b46291a3637508
+msg: ABC
+msg hash: b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78 
+msg sgin: 2b60542a308519a027ed53da537dbd9cdeee97851a2210d4e40f4a3aee1b05132775316fc366509c60e2ebdd3fa5dc18d9c72470461c5b46118891061492f808
+

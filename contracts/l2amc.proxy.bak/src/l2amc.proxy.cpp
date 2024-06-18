@@ -75,10 +75,12 @@ std::vector<char> num_to_var_int(const uint64_t x) {
 }
 
 
-eosio::checksum256 sha256(const vector<char> data){
+eosio::checksum256 sha256sha256(const vector<char> data){
 
     auto sha_1 = sha256(data.data(),data.size());
-    return sha_1;
+    auto byte_array = sha_1.extract_as_byte_array();
+    auto chars = reinterpret_cast<const char*>(byte_array.data());
+    return sha256(chars,byte_array.size());
 }
 void proxy::init(const name& admin, const name& owner_contract){
     require_auth(_self);
@@ -97,7 +99,7 @@ void proxy::activate( const name& account,
     auto msg_packed = pack(temp_amc_pub);
     auto packed_data = pack(msg_packed_t(MESSAGE_MAGIC,to_hex(msg_packed.data(),msg_packed.size())));
     
-    auto public_key = recover_key(sha256(packed_data),signature);
+    auto public_key = recover_key(sha256sha256(packed_data),signature);
 
     auto accs = l2amc_owner::l2amc_account_t::idx_t( _gstate.owner_contract, L2AMC_BTC_NAME.value);
     auto itr = accs.find(account.value);
@@ -126,7 +128,7 @@ void proxy::submitaction(const name& account, const vector<char> packed_action,c
         msg_packed.push_back(*it);
     }
     packed.insert(packed.end(),msg_packed.begin(),msg_packed.end());
-    auto recover_pub_key =  recover_key( sha256(packed), sign);
+    auto recover_pub_key =  recover_key( sha256sha256(packed), sign);
     auto accs = l2amc_owner::l2amc_account_t::idx_t( _gstate.owner_contract, L2AMC_BTC_NAME.value);
     
     auto itr = accs.find(account.value);
@@ -148,19 +150,4 @@ void proxy::submitaction(const name& account, const vector<char> packed_action,c
     l2amc_owner::execaction_action exec_act(_gstate.owner_contract,{ {get_self(), ACTIVE_PERM} });
     exec_act.send( _self,L2AMC_BTC_NAME, account , actions, unpacked_action.nonce);
 
-}
-
-void proxy::test( const vector<char> packed_action,const eosio::signature& sign){
-    
-    string msg = to_hex(packed_action.data(),packed_action.size());
-
-    vector<char> packed = pack(MESSAGE_MAGIC);
-    vector<char> msg_packed = {num_to_var_int(msg.size())};
-    
-    for (auto it = msg.begin(); it != msg.end(); ++it) {
-        msg_packed.push_back(*it);
-    }
-    packed.insert(packed.end(),msg_packed.begin(),msg_packed.end());
-    auto recover_pub_key =  recover_key( sha256(packed), sign);
-    
 }

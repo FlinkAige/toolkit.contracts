@@ -1,3 +1,5 @@
+btc.owner
+
 c=l3owner4
 tnew $c
 tset $c l2amc.owner
