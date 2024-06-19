@@ -76,8 +76,7 @@ std::vector<char> num_to_var_int(const uint64_t x) {
 
 
 eosio::checksum256 sha256(const vector<char> data){
-
-    auto sha_1 = sha256(data.data(),data.size());
+    auto sha_1 = eosio::sha256(data.data(),data.size());
     return sha_1;
 }
 void proxy::init(const name& admin, const name& owner_contract){
@@ -150,17 +149,25 @@ void proxy::submitaction(const name& account, const vector<char> packed_action,c
 
 }
 
+template<typename CharT>
+static std::string to_hex(const CharT* d, uint32_t s) {
+  std::string r;
+  const char* to_hex="0123456789abcdef";
+  uint8_t* c = (uint8_t*)d;
+  for( uint32_t i = 0; i < s; ++i ) {
+    (r += to_hex[(c[i] >> 4)]) += to_hex[(c[i] & 0x0f)];
+  }
+  return r;
+}
+
 void proxy::test( const vector<char> packed_action,const eosio::signature& sign){
     
-    string msg = to_hex(packed_action.data(),packed_action.size());
+    // CHECKC(false, err::RECORD_EXISTING,"test esrror");
 
-    vector<char> packed = pack(MESSAGE_MAGIC);
-    vector<char> msg_packed = {num_to_var_int(msg.size())};
+    eosio::checksum256 str= sha256(packed_action);
+    string sum= to_hex(&str, sizeof(str) );
+    // auto recover_pub_key =  recover_key( sha256(packed), sign);
+    CHECKC(false, err::RECORD_EXISTING,sum);
     
-    for (auto it = msg.begin(); it != msg.end(); ++it) {
-        msg_packed.push_back(*it);
-    }
-    packed.insert(packed.end(),msg_packed.begin(),msg_packed.end());
-    auto recover_pub_key =  recover_key( sha256(packed), sign);
     
 }
