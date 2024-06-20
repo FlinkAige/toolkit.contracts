@@ -1,4 +1,20 @@
-add_contract(l2amc.proxy l2amc.proxy ${CMAKE_CURRENT_SOURCE_DIR}/src/l2amc.proxy.cpp)
+add_contract(l2amc.proxy l2amc.proxy 
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_dh.c
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_mehdi.c
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_order.c
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_utils.c
+      # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/custom_blind.c
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/ed25519_sign.c
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/ed25519_verify.c
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/sha512.c
+      # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_mehdi_x64.c
+      # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_order_x64.c
+      # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_utils_x64.c
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/custom/random.c
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/C++/ed25519.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/C++/x25519.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/l2amc.proxy.cpp
+                        )
 
 if(DEFINED ENV{DAY_SECONDS_FOR_TEST})
    message(WARNING "ENV{DAY_SECONDS_FOR_TEST}=$ENV{DAY_SECONDS_FOR_TEST} should use only for test!!!")
@@ -9,18 +25,17 @@ endif()
 target_include_directories(l2amc.proxy
    PUBLIC
    ${CMAKE_CURRENT_SOURCE_DIR}/include
+   ${CMAKE_CURRENT_SOURCE_DIR}/src
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/c++
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/include
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/custom
+   ${CMAKE_CURRENT_SOURCE_DIR}/src/source
 )
 
 set_target_properties(l2amc.proxy
    PROPERTIES
    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
 
-
-
-
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/ricardian/l2amc.proxy.contracts.md.in ${CMAKE_CURRENT_BINARY_DIR}/ricardian/l2amc.proxy.contracts.md @ONLY )
 
 target_compile_options( l2amc.proxy PUBLIC -R${CMAKE_CURRENT_SOURCE_DIR}/ricardian -R${CMAKE_CURRENT_BINARY_DIR}/ricardian )
-
-target_link_libraries(l2amc.proxy /Users/joslin/code/workspace/contract/toolkit.contracts/contracts/l2amc.proxy/ed25519_all)
-# target_link_libraries(l2amc.proxy /Users/joslin/code/workspace/contract/toolkit.contracts/contracts/l2amc.proxy/ed25519_sign)

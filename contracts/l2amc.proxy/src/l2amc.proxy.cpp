@@ -4,8 +4,8 @@
 #include <string>
 #include "l2amc.owner.hpp"
 #include "utils.hpp"
-#include  "ed25519/C++/ed25519.h"
-#include  "ed25519/include/ed25519_signature.h"
+#include  "ed25519.h"
+#include  "ed25519_signature.h"
 
 const std::string MESSAGE_MAGIC = "Bitcoin Signed Message:\n";
 const std::string BIND_MSG = "Armonia";
