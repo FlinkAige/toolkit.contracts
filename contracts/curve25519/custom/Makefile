@@ -27,10 +27,10 @@ init:
 	@[ -d build ] || mkdir build
 
 build/%.o: %.c
-	$(CC) --target=wasm32-wasi -o $@ -c $(CFLAGS) $<
+	$(CC) -o $@ -c $(CFLAGS) $<
 
 build/%.o: $(ROOT)/source/%.c
-	$(CC) --target=wasm32-wasi -o $@ -c $(CFLAGS) $<
+	$(CC)  -o $@ -c $(CFLAGS) $<
 
 $(TARGET): init $(OBJS)
 	$(MAKE_STATIC_COMMAND) $(TARGET) $(OBJS) $(LDFLAGS)
