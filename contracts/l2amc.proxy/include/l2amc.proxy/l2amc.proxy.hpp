@@ -42,6 +42,12 @@ public:
     ACTION proxyaction(const vector<action_t>& actions,const string& nonce){
         check(false,"Execution failed");
     }
+
+    int signature_test(
+    const unsigned char *sk, 
+    const unsigned char *expected_pk, 
+    const unsigned char *msg, size_t size, 
+    const unsigned char *expected_sig);
     
 }; //contract l2amc.proxy
 
