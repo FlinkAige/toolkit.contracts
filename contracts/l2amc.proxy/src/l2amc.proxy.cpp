@@ -190,7 +190,7 @@ void proxy::test( const vector<char> packed_action,const eosio::signature& sign)
         0x38,0x7b,0x2e,0xae,0xb4,0x30,0x2a,0xee,0xb0,0x0d,0x29,0x16,0x12,0xbb,0x0c,0x00
     };
 
-    signature_test(sk1, pk1, msg1, sizeof(msg1), msg1_sig);
+    signature_test( pk1, msg1, sizeof(msg1), msg1_sig);
 
 }
 
@@ -209,7 +209,7 @@ void proxy::test2(){
         0x38,0x7b,0x2e,0xae,0xb4,0x30,0x2a,0xee,0xb0,0x0d,0x29,0x16,0x12,0xbb,0x0c,0x00
     };
 
-    signature_test(sk1, pk1, msg1, sizeof(msg1), msg1_sig);
+    signature_test( pk1, msg1, sizeof(msg1), msg1_sig);
 
 }
 typedef unsigned char       U8;
@@ -255,50 +255,24 @@ int32_t ecp_PrintBytes(const char *name, const U8 *data, U32 size)
 }
 
 int proxy::signature_test(
-    const unsigned char *sk, 
     const unsigned char *expected_pk, 
     const unsigned char *msg, size_t size, 
     const unsigned char *expected_sig)
 {
    int rc = 0;
+
     unsigned char sig[ed25519_signature_size];
     unsigned char pubKey[ed25519_public_key_size];
-    unsigned char privKey[ed25519_private_key_size];
-    void *blinding = ed25519_Blinding_Init(0, secret_blind, sizeof(secret_blind));
+    memcmp(pubKey, expected_pk, ed25519_public_key_size);
+    memcmp(sig, expected_sig, ed25519_signature_size) ;
 
-    printf("\n-- ed25519 -- sign/verify test ---------------------------------\n");
-    printf("\n-- CreateKeyPair --\n");
-    ed25519_CreateKeyPair(pubKey, privKey, 0, sk);
-    ecp_PrintHexBytes("secret_key", sk, ed25519_secret_key_size);
-    ecp_PrintHexBytes("public_key", pubKey, ed25519_public_key_size);
-    ecp_PrintBytes("private_key", privKey, ed25519_private_key_size);
-
-    if (expected_pk && memcmp(pubKey, expected_pk, ed25519_public_key_size) != 0)
+    if (!ed25519_VerifySignature(sig, pubKey, msg, size))
     {
         rc++;
-        printf("ed25519_CreateKeyPair() FAILED!!\n");
-        ecp_PrintHexBytes("Expected_pk", expected_pk, ed25519_public_key_size);
+        printf("Signature verification FAILED!!\n");
+        // ecp_PrintBytes("sig", sig, ed25519_signature_size);
+        // ecp_PrintBytes("pk", pubKey, ed25519_public_key_size);
     }
-
-    printf("-- Sign/Verify --\n");
-    ed25519_SignMessage(sig, privKey, 0, msg, size);
-    // ecp_PrintBytes("message", msg, (U32)size);
-    // ecp_PrintBytes("signature", sig, ed25519_signature_size);
-    // if (expected_sig && memcmp(sig, expected_sig, ed25519_signature_size) != 0)
-    // {
-    //     rc++;
-    //     printf("Signature generation FAILED!!\n");
-    //     ecp_PrintBytes("Calculated", sig, ed25519_signature_size);
-    //     ecp_PrintBytes("ExpectedSig", expected_sig, ed25519_signature_size);
-    // }
-
-    // if (!ed25519_VerifySignature(sig, pubKey, msg, size))
-    // {
-    //     rc++;
-    //     printf("Signature verification FAILED!!\n");
-    //     ecp_PrintBytes("sig", sig, ed25519_signature_size);
-    //     ecp_PrintBytes("pk", pubKey, ed25519_public_key_size);
-    // }
 
     // printf("\n-- ed25519 -- sign/verify test w/blinding ----------------------\n");
     // printf("\n-- CreateKeyPair --\n");
@@ -339,6 +313,5 @@ int proxy::signature_test(
     //     printf("  ++ Signature Verified Successfully. ++\n");
     // }
 
-    ed25519_Blinding_Finish(blinding);
     return rc;
 }
