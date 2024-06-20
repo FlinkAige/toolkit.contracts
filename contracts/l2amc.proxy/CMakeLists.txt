@@ -22,4 +22,5 @@ configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/ricardian/l2amc.proxy.contracts.md.i
 
 target_compile_options( l2amc.proxy PUBLIC -R${CMAKE_CURRENT_SOURCE_DIR}/ricardian -R${CMAKE_CURRENT_BINARY_DIR}/ricardian )
 
-target_link_libraries(l2amc.proxy /Users/joslin/code/workspace/contract/toolkit.contracts/contracts/l2amc.proxy/ed25519.a)
+target_link_libraries(l2amc.proxy /opt/ed25519_verify.a)
+target_link_libraries(l2amc.proxy /opt/ed25519_sign.a)
