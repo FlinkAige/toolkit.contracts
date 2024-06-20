@@ -31,7 +31,7 @@ init:
 	$(CUSTOM_TOOL) b edp_custom_blinding > custom_blind.h
 
 $(BUILD_DIR)/%.o: %.c
-	$(CC) --target=wasm32-wasi -o $@ -c $(CFLAGS) $<
+	$(CC) -o $@ -c $(CFLAGS) $<
 
 $(TARGET): init $(OBJS)
 	$(MAKE_STATIC_LIB) $(TARGET) $(OBJS) $(LDFLAGS)
