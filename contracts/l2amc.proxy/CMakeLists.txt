@@ -12,7 +12,7 @@ add_contract(l2amc.proxy l2amc.proxy
       # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_utils_x64.c
       ${CMAKE_CURRENT_SOURCE_DIR}/src/custom/random.c
       ${CMAKE_CURRENT_SOURCE_DIR}/src/C++/ed25519.cpp
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/C++/x25519.cpp
+      # ${CMAKE_CURRENT_SOURCE_DIR}/src/C++/x25519.cpp
       ${CMAKE_CURRENT_SOURCE_DIR}/src/l2amc.proxy.cpp
                         )
 

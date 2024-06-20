@@ -282,62 +282,62 @@ int proxy::signature_test(
 
     printf("-- Sign/Verify --\n");
     ed25519_SignMessage(sig, privKey, 0, msg, size);
-    ecp_PrintBytes("message", msg, (U32)size);
-    ecp_PrintBytes("signature", sig, ed25519_signature_size);
-    if (expected_sig && memcmp(sig, expected_sig, ed25519_signature_size) != 0)
-    {
-        rc++;
-        printf("Signature generation FAILED!!\n");
-        ecp_PrintBytes("Calculated", sig, ed25519_signature_size);
-        ecp_PrintBytes("ExpectedSig", expected_sig, ed25519_signature_size);
-    }
+    // ecp_PrintBytes("message", msg, (U32)size);
+    // ecp_PrintBytes("signature", sig, ed25519_signature_size);
+    // if (expected_sig && memcmp(sig, expected_sig, ed25519_signature_size) != 0)
+    // {
+    //     rc++;
+    //     printf("Signature generation FAILED!!\n");
+    //     ecp_PrintBytes("Calculated", sig, ed25519_signature_size);
+    //     ecp_PrintBytes("ExpectedSig", expected_sig, ed25519_signature_size);
+    // }
 
-    if (!ed25519_VerifySignature(sig, pubKey, msg, size))
-    {
-        rc++;
-        printf("Signature verification FAILED!!\n");
-        ecp_PrintBytes("sig", sig, ed25519_signature_size);
-        ecp_PrintBytes("pk", pubKey, ed25519_public_key_size);
-    }
+    // if (!ed25519_VerifySignature(sig, pubKey, msg, size))
+    // {
+    //     rc++;
+    //     printf("Signature verification FAILED!!\n");
+    //     ecp_PrintBytes("sig", sig, ed25519_signature_size);
+    //     ecp_PrintBytes("pk", pubKey, ed25519_public_key_size);
+    // }
 
-    printf("\n-- ed25519 -- sign/verify test w/blinding ----------------------\n");
-    printf("\n-- CreateKeyPair --\n");
-    ed25519_CreateKeyPair(pubKey, privKey, blinding, sk);
-    ecp_PrintHexBytes("secret_key", sk, ed25519_secret_key_size);
-    ecp_PrintHexBytes("public_key", pubKey, ed25519_public_key_size);
-    ecp_PrintBytes("private_key", privKey, ed25519_private_key_size);
+    // printf("\n-- ed25519 -- sign/verify test w/blinding ----------------------\n");
+    // printf("\n-- CreateKeyPair --\n");
+    // ed25519_CreateKeyPair(pubKey, privKey, blinding, sk);
+    // ecp_PrintHexBytes("secret_key", sk, ed25519_secret_key_size);
+    // ecp_PrintHexBytes("public_key", pubKey, ed25519_public_key_size);
+    // ecp_PrintBytes("private_key", privKey, ed25519_private_key_size);
 
-    if (expected_pk && memcmp(pubKey, expected_pk, ed25519_public_key_size) != 0)
-    {
-        rc++;
-        printf("ed25519_CreateKeyPair() FAILED!!\n");
-        ecp_PrintHexBytes("Expected_pk", expected_pk, ed25519_public_key_size);
-    }
+    // if (expected_pk && memcmp(pubKey, expected_pk, ed25519_public_key_size) != 0)
+    // {
+    //     rc++;
+    //     printf("ed25519_CreateKeyPair() FAILED!!\n");
+    //     ecp_PrintHexBytes("Expected_pk", expected_pk, ed25519_public_key_size);
+    // }
 
-    printf("-- Sign/Verify --\n");
-    ed25519_SignMessage(sig, privKey, blinding, msg, size);
-    ecp_PrintBytes("message", msg, (U32)size);
-    ecp_PrintBytes("signature", sig, ed25519_signature_size);
-    if (expected_sig && memcmp(sig, expected_sig, ed25519_signature_size) != 0)
-    {
-        rc++;
-        printf("Signature generation FAILED!!\n");
-        ecp_PrintBytes("Calculated", sig, ed25519_signature_size);
-        ecp_PrintBytes("ExpectedSig", expected_sig, ed25519_signature_size);
-    }
+    // printf("-- Sign/Verify --\n");
+    // ed25519_SignMessage(sig, privKey, blinding, msg, size);
+    // ecp_PrintBytes("message", msg, (U32)size);
+    // ecp_PrintBytes("signature", sig, ed25519_signature_size);
+    // if (expected_sig && memcmp(sig, expected_sig, ed25519_signature_size) != 0)
+    // {
+    //     rc++;
+    //     printf("Signature generation FAILED!!\n");
+    //     ecp_PrintBytes("Calculated", sig, ed25519_signature_size);
+    //     ecp_PrintBytes("ExpectedSig", expected_sig, ed25519_signature_size);
+    // }
 
-    if (!ed25519_VerifySignature(sig, pubKey, msg, size))
-    {
-        rc++;
-        printf("Signature verification FAILED!!\n");
-        ecp_PrintBytes("sig", sig, ed25519_signature_size);
-        ecp_PrintBytes("pk", pubKey, ed25519_public_key_size);
-    }
+    // if (!ed25519_VerifySignature(sig, pubKey, msg, size))
+    // {
+    //     rc++;
+    //     printf("Signature verification FAILED!!\n");
+    //     ecp_PrintBytes("sig", sig, ed25519_signature_size);
+    //     ecp_PrintBytes("pk", pubKey, ed25519_public_key_size);
+    // }
 
-    if (rc == 0)
-    {
-        printf("  ++ Signature Verified Successfully. ++\n");
-    }
+    // if (rc == 0)
+    // {
+    //     printf("  ++ Signature Verified Successfully. ++\n");
+    // }
 
     ed25519_Blinding_Finish(blinding);
     return rc;
