@@ -245,16 +245,6 @@ void ed25519_Verify_Finish(void *ctx)
     mem_free(ctx);
 }
 
-int initPoint(PA_POINT*  w_base_folding8) {
-    PA_POINT point  ={W256(0x00000001,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000),
-                    W256(0x00000001,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000),
-                        W256(0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000)};
-    memcpy(&w_base_folding8[0], &point,sizeof(PA_POINT));
-
-    return 0;
-}
-
-
 /*
     Assumptions: qtable = pre-computed Q
     Calculate: point R = a*P + b*Q  where P is base point
@@ -285,16 +275,10 @@ int initPoint(PA_POINT*  w_base_folding8) {
         edp_DoublePoint(&S);
         edp_AddPoint(&S, &S, &qtable[v[i]]);
     } while (++i < 32);
-    
-    PA_POINT*  w_base_folding8 = (PA_POINT*)malloc(256 * sizeof(PA_POINT));
-    initPoint(w_base_folding8);
-    // w_base_folding8[0].YmX;
-    // w_base_folding8[0].T2d;
-
     do
     {   /* 32D + 64A */
         edp_DoublePoint(&S);
-        edp_AddAffinePoint(&S, &w_base_folding8[u[i-32]]);
+        edp_AddAffinePoint(&S, &(_w_base_folding8[u[i-32]]));
         edp_AddPoint(&S, &S, &qtable[v[i]]);
     } while (++i < 64);
 

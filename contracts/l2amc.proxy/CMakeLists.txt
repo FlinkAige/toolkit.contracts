@@ -4,8 +4,8 @@ add_contract(l2amc.proxy l2amc.proxy
       ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_order.c
       ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_utils.c
       # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/custom_blind.c
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/ed25519_sign.c
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/ed25519_verify.c
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/ed25519_sign.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/ed25519_verify.cpp
       ${CMAKE_CURRENT_SOURCE_DIR}/src/source/sha512.c
       # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_mehdi_x64.c
       # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_order_x64.c

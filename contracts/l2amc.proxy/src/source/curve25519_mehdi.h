@@ -79,6 +79,7 @@ typedef struct
     U_WORD YpX[K_WORDS];        /* Y+X */
     U_WORD YmX[K_WORDS];        /* Y-X */
     U_WORD T2d[K_WORDS];        /* 2d*T */
+    
 } PA_POINT;
 
 typedef struct {
