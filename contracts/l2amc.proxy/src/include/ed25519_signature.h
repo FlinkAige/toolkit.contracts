@@ -92,6 +92,7 @@ int ed25519_Verify_Check(
 /* Free up context memory */
 void ed25519_Verify_Finish(void *ctx);
 
+
 #ifdef __cplusplus
 }
 #endif

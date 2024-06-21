@@ -69,10 +69,20 @@ void ed25519_CalculateX(OUT U_WORD *X, IN const U_WORD *Y, U_WORD parity)
 
     /* Calculate sqrt((y^2 - 1)/(d*y^2 + 1)) */
 
+
     ecp_SqrReduce(u, Y);            /* u = y^2 */
     ecp_MulReduce(v, u, _w_d);      /* v = dy^2 */
-    ecp_SubReduce(u, u, _w_One);    /* u = y^2-1 */
-    ecp_AddReduce(v, v, _w_One);    /* v = dy^2+1 */
+      const PA_POINT w_base_folding8[1] =
+    {
+    { /* P{0} */
+        W256(0x00000001,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000),
+        W256(0x00000001,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000),
+        W256(0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000)
+    }};
+
+
+    ecp_SubReduce(u, u, w_base_folding8[0].YpX);    /* u = y^2-1 */
+    ecp_AddReduce(v, v, w_base_folding8[0].YpX);    /* v = dy^2+1 */
 
     /* Calculate:  sqrt(u/v) = u*v^3 * (u*v^7)^((p-5)/8) */
 
@@ -90,7 +100,7 @@ void ed25519_CalculateX(OUT U_WORD *X, IN const U_WORD *Y, U_WORD parity)
     ecp_MulReduce(b, b, v);
     ecp_SubReduce(b, b, u);
     ecp_Mod(b);
-    if (ecp_CmpNE(b, _w_Zero)) ecp_MulReduce(X, X, _w_I);
+    if (ecp_CmpNE(b, w_base_folding8[0].T2d)) ecp_MulReduce(X, X, _w_I);
 
     while (ecp_CmpLT(X, _w_P) == 0) ecp_Sub(X, X, _w_P);
 
@@ -168,7 +178,6 @@ int ed25519_VerifySignature(
     EDP_SIGV_CTX ctx;
 
     ed25519_Verify_Init(&ctx, publicKey);
-
     return ed25519_Verify_Check(&ctx, signature, msg, msg_size);
 }
 
@@ -236,11 +245,21 @@ void ed25519_Verify_Finish(void *ctx)
     mem_free(ctx);
 }
 
+int initPoint(PA_POINT*  w_base_folding8) {
+    PA_POINT point  ={W256(0x00000001,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000),
+                    W256(0x00000001,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000),
+                        W256(0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000)};
+    memcpy(&w_base_folding8[0], &point,sizeof(PA_POINT));
+
+    return 0;
+}
+
+
 /*
     Assumptions: qtable = pre-computed Q
     Calculate: point R = a*P + b*Q  where P is base point
 */
-static void edp_PolyPointMultiply(
+ void edp_PolyPointMultiply(
     Affine_POINT *r, 
     const U_WORD *a, 
     const U_WORD *b, 
@@ -266,11 +285,16 @@ static void edp_PolyPointMultiply(
         edp_DoublePoint(&S);
         edp_AddPoint(&S, &S, &qtable[v[i]]);
     } while (++i < 32);
+    
+    PA_POINT*  w_base_folding8 = (PA_POINT*)malloc(256 * sizeof(PA_POINT));
+    initPoint(w_base_folding8);
+    // w_base_folding8[0].YmX;
+    // w_base_folding8[0].T2d;
 
     do
     {   /* 32D + 64A */
         edp_DoublePoint(&S);
-        edp_AddAffinePoint(&S, &_w_base_folding8[u[i-32]]);
+        edp_AddAffinePoint(&S, &w_base_folding8[u[i-32]]);
         edp_AddPoint(&S, &S, &qtable[v[i]]);
     } while (++i < 64);
 
@@ -311,3 +335,4 @@ int ed25519_Verify_Check(
 
     return (memcmp(md, signature, 32) == 0) ? 1 : 0;
 }
+
