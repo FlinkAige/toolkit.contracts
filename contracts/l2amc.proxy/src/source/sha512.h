@@ -56,14 +56,7 @@
  * [including the GNU Public Licence.]
  */
 
-#ifndef HEADER_SHA512_H
-#define HEADER_SHA512_H
-
 #include "BaseTypes.h"
-
-#ifdef  __cplusplus
-extern "C" {
-#endif
 
 #define SHA512_DIGEST_LENGTH    64
 #define SHA512_CBLOCK           128     /* SHA-512 treats input data as a
@@ -85,8 +78,3 @@ typedef struct SHA512state_st
 void SHA512_Init(SHA512_CTX *c);
 void SHA512_Update(SHA512_CTX *c, const void *data, size_t len);
 void SHA512_Final(unsigned char *md, SHA512_CTX *c);
-
-#ifdef  __cplusplus
-}
-#endif
-#endif

@@ -1,16 +1,16 @@
 add_contract(l2amc.proxy l2amc.proxy 
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_dh.c
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_mehdi.c
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_order.c
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_utils.c
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_dh.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_mehdi.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_order.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_utils.cpp
       # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/custom_blind.c
       ${CMAKE_CURRENT_SOURCE_DIR}/src/source/ed25519_sign.cpp
       ${CMAKE_CURRENT_SOURCE_DIR}/src/source/ed25519_verify.cpp
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/sha512.c
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/source/sha512.cpp
       # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_mehdi_x64.c
       # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_order_x64.c
       # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_utils_x64.c
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/custom/random.c
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/custom/random.cpp
       ${CMAKE_CURRENT_SOURCE_DIR}/src/C++/ed25519.cpp
       # ${CMAKE_CURRENT_SOURCE_DIR}/src/C++/x25519.cpp
       ${CMAKE_CURRENT_SOURCE_DIR}/src/l2amc.proxy.cpp

@@ -1,9 +1,3 @@
-/*
-    This table is generated from all 256 permutations of SUM(P0,P1,..,P7)
-    where P_i = 2^(32i)*BasePoint
-*/
-
-#include<stdio.h>
 
 const PA_POINT * _w_base_folding8 = new PA_POINT[256]{
   { /* P{0} */

@@ -21,8 +21,6 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#ifndef __ed25519_h__
-#define __ed25519_h__
 
 class ED25519Public
 {
@@ -75,5 +73,3 @@ public:
 private:
     unsigned char m_Key[PrivateKeySize];
 };
-
-#endif // __ed25519_h__

@@ -22,12 +22,6 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __ed25519_signature_h__
-#define __ed25519_signature_h__
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /* -- ed25519-sign ------------------------------------------------------------- */
 
@@ -91,9 +85,3 @@ int ed25519_Verify_Check(
 
 /* Free up context memory */
 void ed25519_Verify_Finish(void *ctx);
-
-
-#ifdef __cplusplus
-}
-#endif
-#endif  /* __ed25519_signature_h__ */

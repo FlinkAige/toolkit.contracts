@@ -72,17 +72,8 @@ void ed25519_CalculateX(OUT U_WORD *X, IN const U_WORD *Y, U_WORD parity)
 
     ecp_SqrReduce(u, Y);            /* u = y^2 */
     ecp_MulReduce(v, u, _w_d);      /* v = dy^2 */
-      const PA_POINT w_base_folding8[1] =
-    {
-    { /* P{0} */
-        W256(0x00000001,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000),
-        W256(0x00000001,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000),
-        W256(0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000,0x00000000)
-    }};
-
-
-    ecp_SubReduce(u, u, w_base_folding8[0].YpX);    /* u = y^2-1 */
-    ecp_AddReduce(v, v, w_base_folding8[0].YpX);    /* v = dy^2+1 */
+    ecp_SubReduce(u, u, _w_base_folding8[0].YpX);    /* u = y^2-1 */
+    ecp_AddReduce(v, v, _w_base_folding8[0].YpX);    /* v = dy^2+1 */
 
     /* Calculate:  sqrt(u/v) = u*v^3 * (u*v^7)^((p-5)/8) */
 
@@ -100,7 +91,7 @@ void ed25519_CalculateX(OUT U_WORD *X, IN const U_WORD *Y, U_WORD parity)
     ecp_MulReduce(b, b, v);
     ecp_SubReduce(b, b, u);
     ecp_Mod(b);
-    if (ecp_CmpNE(b, w_base_folding8[0].T2d)) ecp_MulReduce(X, X, _w_I);
+    if (ecp_CmpNE(b, _w_base_folding8[0].T2d)) ecp_MulReduce(X, X, _w_I);
 
     while (ecp_CmpLT(X, _w_P) == 0) ecp_Sub(X, X, _w_P);
 
@@ -249,7 +240,7 @@ void ed25519_Verify_Finish(void *ctx)
     Assumptions: qtable = pre-computed Q
     Calculate: point R = a*P + b*Q  where P is base point
 */
- void edp_PolyPointMultiply(
+ static void edp_PolyPointMultiply(
     Affine_POINT *r, 
     const U_WORD *a, 
     const U_WORD *b, 
