@@ -11,7 +11,7 @@ add_contract(l2amc.proxy l2amc.proxy
       # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_order_x64.c
       # ${CMAKE_CURRENT_SOURCE_DIR}/src/source/curve25519_utils_x64.c
       ${CMAKE_CURRENT_SOURCE_DIR}/src/custom/random.cpp
-      ${CMAKE_CURRENT_SOURCE_DIR}/src/C++/ed25519.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/custom/ed25519.cpp
       # ${CMAKE_CURRENT_SOURCE_DIR}/src/C++/x25519.cpp
       ${CMAKE_CURRENT_SOURCE_DIR}/src/l2amc.proxy.cpp
                         )
@@ -26,7 +26,6 @@ target_include_directories(l2amc.proxy
    PUBLIC
    ${CMAKE_CURRENT_SOURCE_DIR}/include
    ${CMAKE_CURRENT_SOURCE_DIR}/src
-   ${CMAKE_CURRENT_SOURCE_DIR}/src/c++
    ${CMAKE_CURRENT_SOURCE_DIR}/src/include
    ${CMAKE_CURRENT_SOURCE_DIR}/src/custom
    ${CMAKE_CURRENT_SOURCE_DIR}/src/source
