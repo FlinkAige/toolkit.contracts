@@ -258,7 +258,7 @@ int proxy::signature_test(
 {
    int rc = 0;
     ecp_PrintHexBytes("public_key", expected_pk, ed25519_public_key_size);
-
+    print_w_P("begin.....");
     if (!ed25519_VerifySignature(expected_sig, expected_pk, msg, size))
     {
        CHECKC( false, err::ACCOUNT_INVALID, "Signature verification FAILED!!\n");

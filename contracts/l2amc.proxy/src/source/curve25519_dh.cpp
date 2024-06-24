@@ -36,6 +36,18 @@ extern EDP_BLINDING_CTX edp_custom_blinding;
 /* x coordinate of base point */
 const U8 ecp_BasePoint[32] = { 
     9,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0 };
+
+const U32 _w_P[8] = {
+    0xFFFFFFED,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+    0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0x7FFFFFFF
+};
+
+/* Maximum number of prime p that fits into 256-bits */
+const U32 _w_maxP[8] = {   /* 2*P < 2**256 */
+    0xFFFFFFDA,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+    0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF
+};
+
 /* Y = X + X */
 void ecp_MontDouble(XZ_POINT *Y, const XZ_POINT *X)
 {

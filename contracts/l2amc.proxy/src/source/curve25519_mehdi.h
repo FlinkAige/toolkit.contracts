@@ -25,10 +25,6 @@
 #ifndef __curve25519_mehdi_h__
 #define __curve25519_mehdi_h__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "BaseTypes.h"
 
 #define ECP_VERSION_STR     "1.2.0"
@@ -90,6 +86,11 @@ typedef struct {
 
 extern const U8 ecp_BasePoint[K_BYTES];
 
+extern PA_POINT * _w_base_folding8;
+extern const U32 _w_P[8];
+
+/* Maximum number of prime p that fits into 256-bits */
+extern const U32 _w_maxP[8];
 /* Return point Q = k*P */
 void ecp_PointMultiply(OUT U8 *Q, IN const U8 *P, IN const U8 *K, IN int len);
 
@@ -170,7 +171,4 @@ void edp_BasePointMultiply(OUT Affine_POINT *Q, IN const U_WORD *sk,
 void ecp_4Folds(U8* Y, const U_WORD* X);
 void ecp_8Folds(U8* Y, const U_WORD* X);
 
-#ifdef __cplusplus
-}
 #endif
-#endif  /* __curve25519_mehdi_h__ */

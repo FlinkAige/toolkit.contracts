@@ -30,6 +30,9 @@
 #define ed25519_private_key_size    64
 #define ed25519_signature_size      64
 
+
+
+
 /* Generate public key associated with the secret key */
 void ed25519_CreateKeyPair(
     unsigned char *pubKey,              /* OUT: public key */
@@ -64,6 +67,9 @@ int ed25519_VerifySignature(
     const unsigned char *msg,           /* IN: [msg_size bytes] message to sign */
     size_t msg_size);                   /* IN: size of message */
 
+
+void print_w_P(char* header);
+
 /*  First part of two-phase signature validation.
     This function creates context specifc to a given public key.
     Needs to be called once per public key
@@ -71,6 +77,9 @@ int ed25519_VerifySignature(
 void * ed25519_Verify_Init(
     void *context,                      /* IO: null or verify context to use */
     const unsigned char *publicKey);    /* IN: [32 bytes] public key */
+
+void init_base_foloding8();    /* IN: [32 bytes] public key */
+
 
 /*  Second part of two-phase signature validation.
     Input context is output of ed25519_Verify_Init() for associated public key.

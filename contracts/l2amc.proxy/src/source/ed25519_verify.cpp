@@ -26,7 +26,8 @@
 #include "curve25519_mehdi.h"
 #include "../include/ed25519_signature.h"
 #include "sha512.h"
-
+#include <stdint.h>
+#include <stdio.h>
 /*
  * Arithmetic on twisted Edwards curve y^2 - x^2 = 1 + dx^2y^2
  * with d = -(121665/121666) mod p
@@ -49,13 +50,10 @@ typedef struct {
 extern const U_WORD _w_P[K_WORDS];
 extern const U_WORD _w_di[K_WORDS];
 
-extern const PA_POINT _w_base_folding8[256];
 extern const U_WORD _w_NxBPO[16][K_WORDS];
 
 #define _w_BPO _w_NxBPO[1]
 
-#define _w_Zero     _w_base_folding8[0].T2d
-#define _w_One      _w_base_folding8[0].YpX
 
 const U_WORD _w_I[K_WORDS] = /* sqrt(-1) */
     W256(0x4A0EA0B0,0xC4EE1B27,0xAD2FE478,0x2F431806,0x3DFBD7A7,0x2B4D0099,0x4FC1DF0B,0x2B832480);
@@ -63,16 +61,55 @@ const U_WORD _w_I[K_WORDS] = /* sqrt(-1) */
 static const U_WORD _w_d[K_WORDS] =
     W256(0x135978A3,0x75EB4DCA,0x4141D8AB,0x00700A4D,0x7779E898,0x8CC74079,0x2B6FFE73,0x52036CEE);
 
+
+void print_hex(const U32 *data, size_t length) {
+  printf("  ");
+  for (size_t i = 0; i < length; i++) printf("%08X", data[i]);
+  printf("\n");
+}
+
 void ed25519_CalculateX(OUT U_WORD *X, IN const U_WORD *Y, U_WORD parity)
 {
     U_WORD u[K_WORDS], v[K_WORDS], a[K_WORDS], b[K_WORDS];
 
-    /* Calculate sqrt((y^2 - 1)/(d*y^2 + 1)) */
+    printf("ed25519_CalculateX _w_P -1: \n");
+    print_hex(_w_P, K_WORDS);
+     
 
+     printf("ed25519_CalculateX print _w_base_folding8[0].YpX-1: \n");
+    print_hex(_w_base_folding8[0].YpX, K_WORDS);
+    /* Calculate sqrt((y^2 - 1)/(d*y^2 + 1)) */
+    printf("ed25519_CalculateX X: \n");
+     print_hex(X, K_WORDS);
+    printf("ed25519_CalculateX Y: \n");
+     print_hex(Y, K_WORDS);
+    printf("ed25519_CalculateX parity: \n");
+    print_hex(&parity, 1);
 
     ecp_SqrReduce(u, Y);            /* u = y^2 */
+    printf("ed25519_CalculateX ecp_SqrReduce  1-u: \n");
+    print_hex(u, K_WORDS);
+    printf("ed25519_CalculateX ecp_SqrReduce  1-Y: \n");
+    print_hex(Y, K_WORDS);
+
+
     ecp_MulReduce(v, u, _w_d);      /* v = dy^2 */
+    printf("ed25519_CalculateX ecp_SqrReduce  2-v: \n");
+    print_hex(v, K_WORDS);
+    printf("ed25519_CalculateX ecp_SqrReduce  2-u: \n");
+    print_hex(u, K_WORDS);
+    printf("ed25519_CalculateX ecp_SqrReduce  2-w-d: \n");
+    print_hex(_w_d, K_WORDS);
+
+    printf("ed25519_CalculateX ecp_SqrReduce  3-[0].YpX: \n");
+    print_hex(_w_base_folding8[0].YpX, K_WORDS);
     ecp_SubReduce(u, u, _w_base_folding8[0].YpX);    /* u = y^2-1 */
+    printf("ed25519_CalculateX ecp_SqrReduce  3-u: \n");
+    print_hex(u, K_WORDS);
+    printf("ed25519_CalculateX ecp_SqrReduce  3-[1].YpX: \n");
+    print_hex(_w_base_folding8[0].YpX, K_WORDS);
+
+
     ecp_AddReduce(v, v, _w_base_folding8[0].YpX);    /* v = dy^2+1 */
 
     /* Calculate:  sqrt(u/v) = u*v^3 * (u*v^7)^((p-5)/8) */
@@ -83,7 +120,16 @@ void ed25519_CalculateX(OUT U_WORD *X, IN const U_WORD *Y, U_WORD parity)
     ecp_SqrReduce(b, b);            /* b = v^4 */
     ecp_MulReduce(b, a, b);         /* b = u*v^7 */
     ecp_ModExp2523(b, b);
+
+    printf("ed25519_CalculateX ecp_CmpLT after ecp_ModExp2523 a: \n");
+    print_hex(a, K_WORDS);
+    printf("ed25519_CalculateX ecp_CmpLT after ecp_ModExp2523 b: \n");
+    print_hex(b, K_WORDS);
+
     ecp_MulReduce(X, b, a);
+
+    printf("ed25519_CalculateX ecp_CmpLT after ecp_MulReduce X: \n");
+    print_hex(X, K_WORDS);
 
     /* Check if we have correct sqrt, else, multiply by sqrt(-1) */
 
@@ -92,17 +138,35 @@ void ed25519_CalculateX(OUT U_WORD *X, IN const U_WORD *Y, U_WORD parity)
     ecp_SubReduce(b, b, u);
     ecp_Mod(b);
     if (ecp_CmpNE(b, _w_base_folding8[0].T2d)) ecp_MulReduce(X, X, _w_I);
+    printf(" print_hex begin:\n ");
 
-    while (ecp_CmpLT(X, _w_P) == 0) ecp_Sub(X, X, _w_P);
+    printf("ed25519_CalculateX ecp_CmpLT X: \n");
+    print_hex(X, K_WORDS);
 
-    /* match parity */
+    printf("ed25519_CalculateX ecp_CmpLT _w_P: \n");
+    print_hex(_w_P, 8);
+
+
+    while (ecp_CmpLT(X, _w_P) == 0){
+        // print_hex(_w_P, K_WORDS);
+        print_hex(X, K_WORDS);
+        ecp_Sub(X, X, _w_P);
+    } 
+    printf(" print_hex end \n\n\n ");
+
+    //timeout
+
+    // /* match parity */
     if (((X[0] ^ parity) & 1) != 0)
-        ecp_Sub(X, _w_P, X);
+         ecp_Sub(X, _w_P, X);
 }
+
+
 
 void ed25519_UnpackPoint(Affine_POINT *r, const unsigned char *p)
 {
     U8 parity = ecp_DecodeInt(r->y, p);
+
     ed25519_CalculateX(r->x, r->y, parity);
 }
 
@@ -160,6 +224,19 @@ void edp_AddPoint(Ext_POINT *r, const Ext_POINT *p, const PE_POINT *q)
     ecp_MulReduce(r->t, e, b);              /* E*H */
     ecp_MulReduce(r->z, d, a);              /* G*F */
 }
+void print_hex3(const U32 *data, size_t length) {
+  printf("  ");
+  for (size_t i = 0; i < length; i++) printf("%08X", data[i]);
+  printf("\n");
+}
+
+
+
+void print_w_P(char* header){
+    printf(header);
+    printf("ed25519_VerifySignature TEST2  _w_P-1: \n");
+    print_hex3(_w_P, K_WORDS);
+}
 
 int ed25519_VerifySignature(
     const unsigned char *signature,             /* IN: signature (R,S) */
@@ -167,6 +244,15 @@ int ed25519_VerifySignature(
     const unsigned char *msg, size_t msg_size)  /* IN: message to sign */
 {
     EDP_SIGV_CTX ctx;
+    init_base_foloding8();
+    
+    printf("ed25519_VerifySignature TEST2  _w_base_folding8[0].YpX-2: \n");
+    
+    print_hex3(_w_base_folding8[0].YpX, K_WORDS);
+
+    printf("ed25519_VerifySignature TEST2  _w_P: \n");
+    print_hex3(_w_P, K_WORDS);
+
 
     ed25519_Verify_Init(&ctx, publicKey);
     return ed25519_Verify_Check(&ctx, signature, msg, msg_size);
@@ -190,10 +276,11 @@ void * ed25519_Verify_Init(
     {
         memcpy(ctx->pk, publicKey, 32);
         i = ecp_DecodeInt(Q.y, publicKey);
-        ed25519_CalculateX(Q.x, Q.y, ~i);       /* Invert parity for -Q */
+        ed25519_CalculateX(Q.x, Q.y, ~i);       /* Invert parity for -Q */ ///timeout 
+        ///=====
         ecp_MulMod(Q.t, Q.x, Q.y);
         ecp_SetValue(Q.z, 1);
-
+        //======
         /* pre-compute q-table */
 
         /* Calculate: Q0=Q, Q1=(2^64)*Q, Q2=(2^128)*Q, Q3=(2^192)*Q */
@@ -202,7 +289,6 @@ void * ed25519_Verify_Init(
         ecp_SetValue(ctx->q_table[0].YmX, 1);
         ecp_SetValue(ctx->q_table[0].T2d, 0);
         ecp_SetValue(ctx->q_table[0].Z2, 2);
-
         edp_ExtPoint2PE(&ctx->q_table[1], &Q);          /* -- -- -- q0 */
 
         for (i = 0; i < 64; i++) edp_DoublePoint(&Q);
